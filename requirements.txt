@@ -1,2 +1,4 @@
 Django
 python-docx
+requests
+beautifulsoup4

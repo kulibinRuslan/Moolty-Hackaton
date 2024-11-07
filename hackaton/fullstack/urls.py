@@ -5,7 +5,12 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     
-    path("profile", views.user_profile, name="profile"),
+    path("profile/", views.user_profile, name="profile"),
+    
+    path("login/", views.login_p, name="login"),
+    path("register/", views.register, name="register"),
+    
+    path("search_inn/", views.search_inn, name="search_inn"),
     
     # path("questions/", views.questions, name="questions"),
     # path("question/<int:question_id>/", views.edit_question, name="question_edit"),

@@ -1,23 +1,31 @@
-{% extends "fullstack/base.html" %}
+{% extends "fullstack/base.html" %} {% block content %}
 
-{% block content %}
-
-<div class="text-center">
-  <div>
-    <button onclick="changeMode(true);">РЕГИСТРАЦИЯ</button>
-    <button onclick="changeMode(false);">ВХОД</button>
+<div class="d-flex justify-content-center align-items-center align-middle flex-column">
+  <div class="text-center align-self-center" style="width: 356px;">
+  <div class="row bg-light rounded">
+    <button id="reg_btn" class="col btn btn-light m-2 shadow-sm rounded border" onclick="changeMode(true);">
+      РЕГИСТРАЦИЯ
+    </button>
+    <button id="login_btn" class="col btn btn-primary m-2 shadow-sm rounded border" onclick="changeMode(false);">ВХОД</button>
   </div>
   <div id="login_container">
-    <form>
-      <input placeholder="Логин"/>
+    <form action="/login/" method="post">
+      {% csrf_token %}
+      {{ register_form }}
+      <input type="submit" value="ВОЙТИ" class="btn btn-light w-100">
     </form>
   </div>
   <div id="reg_container">
-    <form>
-      <input placeholder="Регистрация"/>
+    <form action="/register/" method="post">
+      {% csrf_token %}
+      {{ login_form }}
+      <input type="submit" value="ЗАРЕГИСТРИРОВАТЬСЯ" class="btn btn-light w-100">
     </form>
   </div>
 </div>
+</div>
+
+
 
 <script>
   let isReg = true;
@@ -26,12 +34,17 @@
     if (mode) {
       $("#login_container").hide();
       $("#reg_container").show();
-    }
-    else {
+      $("#reg_btn").toggleClass("btn-light btn-primary");
+      $("#login_btn").toggleClass("btn-primary btn-light");
+    } else {
       $("#login_container").show();
       $("#reg_container").hide();
+      $("#login_btn").toggleClass("btn-light btn-primary");
+      $("#reg_btn").toggleClass("btn-primary btn-light");
     }
   }
+
+  changeMode(true);
 </script>
 
 {% endblock %}

@@ -1,0 +1,60 @@
+{% extends "fullstack/base.html" %} {% block content %}
+
+<div class="d-flex justify-content-center align-items-center align-middle flex-column">
+    <div class="text-center align-self-center" style="width: 363px;">
+        <h1 class="text-white mb-3" style="font-size: 20px;">ПОЛУЧЕНИЕ ДАННЫХ</h1>
+        <form id="search_form">
+            {% csrf_token %}
+            <input class="form-control bg-transparent text-white" name="inn" type="text" placeholder="ВВЕДИТЕ ИНН" style="height: 45px"><br>
+            <input id="search_btn" class="form-control" type="submit" value="НАЙТИ ОРГАНИЗАЦИЮ" style="height: 45px; color: #2148C0; font-weight: bold;"></input>
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Компания найдена!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h3 id="com_name"></h3>
+          <h4 id="com_ogrn"></h4>
+          <h4 id="com_address"></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="button" class="btn btn-primary">Скачать файлы</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<iframe id="download_iframe" style="display:none;"></iframe>
+
+<script>
+    $('#search_btn').click(function(e){
+        e.preventDefault();
+    
+        var formData = $("#search_form").serialize();
+
+        $.post("/search_inn/", formData,
+            function(data) {
+                $("#com_name").text(data.nameFull);
+                $("#com_ogrn").text(data.ogrn);
+                $("#com_address").text(data.addrRegionName);
+                
+                $('#exampleModal').modal('show');
+                console.log(data);
+            }
+        );
+    });
+
+    function Download(url) {
+        document.getElementById('download_iframe').src = url;
+    };
+</script>
+
+{% endblock %}
