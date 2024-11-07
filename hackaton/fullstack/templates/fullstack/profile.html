@@ -22,7 +22,7 @@
         <div class="modal-body">
           <h3 id="com_name"></h3>
           <h4 id="com_ogrn"></h4>
-          <h4 id="com_address"></h4>
+          <h5 id="com_address"></h5>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -45,8 +45,8 @@
         $.post("/search_inn/", formData,
             function(data) {
                 $("#com_name").text(data.nameFull);
-                $("#com_ogrn").text(data.ogrn);
-                $("#com_address").text(data.addrRegionName);
+                $("#com_ogrn").text("ОГРН: " + data.ogrn);
+                $("#com_address").text(`${data.addrRegionName}, ${data.areaName}, ${data.streetName}`);
                 
                 $('#exampleModal').modal('show');
                 console.log(data);

@@ -29,9 +29,8 @@ def login_p(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        redirect("profile/")
         
-        return HttpResponse("123")
+        return redirect("/profile/")
     else:
         return "Не вышло сори"
 
