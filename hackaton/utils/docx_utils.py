@@ -1,6 +1,6 @@
 from docx import Document
 
-from str_utils import remove_service_chars
+from utils.str_utils import remove_service_chars
 
 
 def replace_tokens_in_docx(docx: str, token_pairs: dict):

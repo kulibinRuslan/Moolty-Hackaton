@@ -12,6 +12,8 @@ urlpatterns = [
     
     path("search_inn/", views.search_inn, name="search_inn"),
     
+    path("download_files/", views.download_files, name="download_files")
+    
     # path("questions/", views.questions, name="questions"),
     # path("question/<int:question_id>/", views.edit_question, name="question_edit"),
     

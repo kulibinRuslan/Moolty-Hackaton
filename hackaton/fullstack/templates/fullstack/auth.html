@@ -11,14 +11,14 @@
   <div id="login_container">
     <form action="/login/" method="post">
       {% csrf_token %}
-      {{ register_form }}
+      {{ register_form.as_p }}
       <input type="submit" value="ВОЙТИ" class="btn btn-light w-100">
     </form>
   </div>
   <div id="reg_container">
     <form action="/register/" method="post">
       {% csrf_token %}
-      {{ login_form }}
+      {{ login_form.as_p }}<br>
       <input type="submit" value="ЗАРЕГИСТРИРОВАТЬСЯ" class="btn btn-light w-100">
     </form>
   </div>

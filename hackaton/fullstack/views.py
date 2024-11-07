@@ -61,8 +61,8 @@ def search_inn(request):
     return HttpResponse(json.dumps(company_info), content_type="application/json")
 
 def download_files(request):
-    com_name = request.POST["company_name"]
-    com_oid = request.POST["company_name"]
+    com_name = request.GET["med_name"]
+    com_oid = request.GET["med_oid"]
     
     date = datetime.now().strftime("%d.%m.%Y")
     
@@ -76,23 +76,21 @@ def download_files(request):
     iamk_doc = replace_tokens_in_docx("doc_templates/Template_IAMK.docx", token_pairs)
 
     user_dir = str(uuid.uuid4())
-    ramd_doc_filename = f"{user_dir}/{uuid.uuid4()}.docx"
-    iamk_doc_filename = f"{user_dir}/{uuid.uuid4()}.docx"
+    ramd_doc_filename = f"user_files/{user_dir}/IAMK_{date}.docx"
+    iamk_doc_filename = f"user_files/{user_dir}/RAMD_{date}.docx"
     
     os.mkdir(f"user_files/{user_dir}")
     
     ramd_doc.save(ramd_doc_filename)
     iamk_doc.save(iamk_doc_filename)
     
+    arch_name = f"files_{str(uuid.uuid4())[:8]}"
     
-    shutil.make_archive(f"files_{str(uuid.uuid4())[:6]}", 'zip', f"user_files/{user_dir}")
+    shutil.make_archive(f"user_files/{arch_name}", 'zip', base_dir="", root_dir=f"user_files/{user_dir}")
     
-    with open(f"files_{str(uuid.uuid4())[:6]}.zip", "rb") as f:
+    with open(f"user_files/{arch_name}.zip", "rb") as f:
         response = HttpResponse(io.BytesIO(f.read()))
         response['Content-Type'] = 'application/x-zip-compressed'
-        response['Content-Disposition'] = 'attachment; filename=album.zip'
+        response['Content-Disposition'] = f'attachment; filename=docs_{date}.zip' 
     
     return response
-    
-    
-    

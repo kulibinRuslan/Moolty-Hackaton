@@ -26,7 +26,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          <button type="button" class="btn btn-primary">Скачать файлы</button>
+          <button id="download_btn" type="button" class="btn btn-primary">Скачать файлы</button>
         </div>
       </div>
     </div>
@@ -35,6 +35,8 @@
 <iframe id="download_iframe" style="display:none;"></iframe>
 
 <script>
+    let lastInfo = null;
+
     $('#search_btn').click(function(e){
         e.preventDefault();
     
@@ -48,13 +50,14 @@
                 
                 $('#exampleModal').modal('show');
                 console.log(data);
+                lastInfo = data;
             }
         );
     });
 
-    function Download(url) {
-        document.getElementById('download_iframe').src = url;
-    };
+    $("#download_btn").click(function(e) {
+        window.open(`/download_files?med_oid=${lastInfo.oid}&med_name=${lastInfo.nameFull}`, '_blank').focus();
+    });
 </script>
 
 {% endblock %}
