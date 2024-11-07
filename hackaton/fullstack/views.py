@@ -29,18 +29,22 @@ def login_p(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         login(request, user)
-        print("круто!")
         redirect("profile/")
         
         return HttpResponse("123")
     else:
-        # Return an 'invalid login' error message.
-        print("не вышло")
         return "Не вышло сори"
 
 
 def register(request):
-    pass
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('/profile/')
+        
+    return redirect(index)
 
 
 def user_profile(request):

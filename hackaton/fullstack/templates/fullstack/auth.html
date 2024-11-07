@@ -1,6 +1,6 @@
 {% extends "fullstack/base.html" %} {% block content %}
 
-<div class="d-flex justify-content-center align-items-center align-middle flex-column">
+<div class="d-flex justify-content-center mt-5 top-50 align-items-center align-middle flex-column">
   <div class="text-center align-self-center" style="width: 356px;">
   <div class="row bg-light rounded">
     <button id="reg_btn" class="col btn btn-light m-2 shadow-sm rounded border" onclick="changeMode(true);">
@@ -18,8 +18,27 @@
   <div id="reg_container">
     <form action="/register/" method="post">
       {% csrf_token %}
-      {{ login_form.as_p }}<br>
+
+      <label class="text-white" for="id_username">Логин:</label><br>
+      {{login_form.username}}
+      <label class="text-white" for="id_email">Email:</label><br>
+      {{login_form.email}}
+      <label class="text-white" for="id_password1">Пароль:</label><br>
+      {{login_form.password1}}
+      <label class="text-white" for="id_password2">Повторите пароль:</label>
+      {{login_form.password2}}<br>
+      
       <input type="submit" value="ЗАРЕГИСТРИРОВАТЬСЯ" class="btn btn-light w-100">
+
+      {% if login_form.errors %}
+      {% for field in login_form %}
+      {% for error in field.errors %}
+      <div class="alert alert-danger alert-dismissible fade show"> {{ error}}
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      {% endif %}
     </form>
   </div>
 </div>
