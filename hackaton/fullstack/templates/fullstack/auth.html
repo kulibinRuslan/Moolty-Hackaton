@@ -1,0 +1,37 @@
+{% extends "fullstack/base.html" %}
+
+{% block content %}
+
+<div class="text-center">
+  <div>
+    <button onclick="changeMode(true);">РЕГИСТРАЦИЯ</button>
+    <button onclick="changeMode(false);">ВХОД</button>
+  </div>
+  <div id="login_container">
+    <form>
+      <input placeholder="Логин"/>
+    </form>
+  </div>
+  <div id="reg_container">
+    <form>
+      <input placeholder="Регистрация"/>
+    </form>
+  </div>
+</div>
+
+<script>
+  let isReg = true;
+
+  function changeMode(mode) {
+    if (mode) {
+      $("#login_container").hide();
+      $("#reg_container").show();
+    }
+    else {
+      $("#login_container").show();
+      $("#reg_container").hide();
+    }
+  }
+</script>
+
+{% endblock %}

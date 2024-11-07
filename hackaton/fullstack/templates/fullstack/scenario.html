@@ -1,0 +1,839 @@
+{% extends "botpanel/base.html" %}
+
+{% block content %}
+
+<style>
+    .treeline,
+    .treeline ul,
+    .treeline li {
+        margin: 0;
+        padding: 0;
+        line-height: 1.2;
+        list-style: none;
+        font-size: 16pt;
+    }
+
+    .treeline ul {
+        margin: 0 0 0 15px;
+        /* отступ вертикальной линии */
+    }
+
+    .treeline>li:not(:only-child),
+    .treeline li li {
+        position: relative;
+        padding: 3px 0 0 25px;
+        /* отступ текста */
+    }
+
+    /* Стиль вертикальной линии */
+    .treeline li:not(:last-child) {
+        border-left: 1px solid #a7a7a7;
+    }
+
+    /* Стили горизонтальной линии*/
+    .treeline li li:before,
+    .treeline>li:not(:only-child):before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1.1em;
+        height: .7em;
+        border-bottom: 1px solid #a7a7a7;
+    }
+
+    /* Вертикальная линия последнего пункта в списка */
+    .treeline li:last-child:before {
+        width: calc(1.1em - 1px);
+        border-left: 1px solid #a7a7a7;
+    }
+
+    #addMenu {
+        padding: 10px;
+        border: solid 2px;
+    }
+
+    body, html {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+</style>
+
+<div class="ps-3 m-1">
+    <h3 class="text-center">Сценарий</h3>
+    <ul id="scenario_root" class="treeline border p-2 rounded-2" style="position: relative; height: 88vh; overflow: auto;" data-bs-offset="0" tabindex="0" data-bs-spy="scroll">
+        {% comment %} <li class="question">
+            <b>Вы программист?</b>
+            <ul>
+                <li class="choice">
+                    Да
+                    <ul>
+                        <li class="answer">
+                            [Ответ] Круто! Вы наняты уборщиком
+                            <ul></ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="choice">
+                    Нет
+                    <ul>
+                        <li class="question">
+                            <b>Вы ящерица?</b>
+                            <ul>
+                                <li class="choice">
+                                    Да
+                                    <ul>
+                                        <li class="question">
+                                            <b>Красная?</b>
+                                            <ul>
+                                                <li class="choice">
+                                                    Да
+                                                    <ul>
+                                                        <li class="answer">
+                                                            [Ответ] Вы приняты!
+                                                            <ul></ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="choice">
+                                                    Нет
+                                                    <ul>
+                                                        <li class="answer">
+                                                            [Ответ] Жаль, а мы в вас верили
+                                                            <ul></ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li><button class="btn btn-outline-primary btn-sm" onclick="addChoice(this)">+ Вариант ответа</button></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="choice">
+                                    Нет
+                                    <ul>
+                                        <li class="question">
+                                            <b>Может быть вы осъминог?</b>
+                                            <ul>
+                                                <li class="choice">
+                                                    Да
+                                                    <ul>
+                                                        <li class="answer">
+                                                            [Ответ] Круто! Мы подумаем, сможем ли найти вам аквариум
+                                                            <ul></ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="choice">
+                                                    Нет
+                                                    <ul>
+                                                        <li class="answer">
+                                                            [Ответ] Жаль, тогда точно не можем вас нанять
+                                                            <ul></ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li><button class="btn btn-outline-primary btn-sm" onclick="addChoice(this)">+ Вариант ответа</button></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><button class="btn btn-outline-primary btn-sm" onclick="addChoice(this)">+ Вариант ответа</button></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class="choice">
+                    Раньше был
+                    <ul>
+                        <li class="question">
+                            <b>Насколько раньше?</b>
+                            <ul>
+                                <li class="choice">
+                                    Месяц назад
+                                    <ul>
+                                        <li class="answer">
+                                            [Ответ] Вы нам подходите. Проходите по ссылке
+                                            <ul></ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="choice">
+                                    Год назад
+                                    <ul>
+                                        <li class="answer">
+                                            [Ответ] Мы рассмотрим вас в качестве кандидата
+                                            <ul></ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="choice">
+                                    Очень давно
+                                    <ul>
+                                        <li class="answer">
+                                            [Ответ] Извините, но вы нам не подходите <button class="btn btn-outline-primary btn-sm" onclick="addChoice(this)">Изменить</button>
+                                            <ul></ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><button class="btn btn-outline-primary btn-sm" onclick="addChoice(this)">+ Вариант ответа</button></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><button class="btn btn-outline-primary btn-sm" onclick="addChoice(this)">+ Вариант ответа</button></li>
+            </ul>
+        </li> {% endcomment %}
+    </ul><br><br>
+</div>
+
+{% comment %} <ul class="treeline border p-2 rounded-2" style="position: relative; height: 88vh; overflow: auto;" data-bs-offset="0" tabindex="0" data-bs-spy="scroll">
+</ul> {% endcomment %}
+
+<div class="modal fade modal-lg" id="addAnswerModal" tabindex="-1" aria-labelledby="addAnswerModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Добавление ответа</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="answerForm">
+                    {% csrf_token %}
+					<div class="mb-3">
+						<label for="id_short_editor_name" class="col-form-label">Короткое название (для отображения в редакторе):</label>
+						<input type="text" class="form-control" required name="short_editor_name" id="id_short_editor_name" />
+					</div>
+					<div class="mb-3">
+						<label for="id_answer_text" class="col-form-label">Ответ:</label>
+						<textarea class="form-control" required name="answer_text" style="min-height: 200px;" id="id_answer_text" maxlength="9900"></textarea>
+					</div>
+                    <div class="mb-3">
+                        <label class="form-label" for="id_answer_file">Файл</label>
+                        <br><input type="file" name="answer_file" class="form-control" id="id_answer_file">
+                    </div>
+
+                    <div class="mt-3 float-end">
+                        <button id="close_answer_modal_btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <input class="btn btn-primary" type="submit" value="Добавить">
+                    </div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade modal-lg" id="editAnswerModal" tabindex="-1" aria-labelledby="editAnswerModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Редактирование ответа</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="editAnswerForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="edit_answer_id" id="id_edit_answer_id" value="">
+					<div class="mb-3">
+						<label for="id_edit_short_editor_name" class="col-form-label">Короткое название (для отображения в редакторе):</label>
+						<input type="text" class="form-control" required name="short_editor_name" id="id_edit_short_editor_name" />
+					</div>
+					<div class="mb-3">
+						<label for="id_edit_answer_text" class="col-form-label">Ответ:</label>
+						<textarea class="form-control" required name="answer_text" style="min-height: 200px;" id="id_edit_answer_text" maxlength="9900"></textarea>
+					</div>
+                    <div class="mb-3">
+                        <label class="form-label" for="id_edit_answer_file">Файл</label>
+                        <br><input type="file" name="answer_file" class="form-control" id="id_edit_answer_file">
+                    </div>
+                    <div id="edit_answer_file" class="mb-3">
+                        <label class="form-label" id="id_delete_file_lb">Текущий файл: </label><br>
+                        <input type="checkbox" name="delete_file" class="form-check-input" id="id_delete_file">
+                        <label class="form-check-label ms-1" for="id_delete_file">Удалить текущий файл</label>
+                    </div>
+                    <div class="mt-3 float-end">
+                        <button id="close_edit_answer_modal_btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <input class="btn btn-primary" type="submit" value="Сохранить">
+                    </div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    class QNode {
+        constructor(value, type, parent = null, children = null) {
+            this.value = value;
+            this.type = type;
+            this.parent = parent;
+    
+            if (children !== null)
+                this.children = children;
+            else
+                this.children = [];
+        }
+    }
+    
+    class QuestionNode {
+        constructor(value, choices = []) {
+            this.type = "question";
+            this.value = value;
+            this.choices = choices;
+        }
+    }
+    
+    class ChoiceNode {
+        constructor(value, next = null) {
+            this.type = "choice";
+            this.value = value;
+            this.next = next;
+        }
+    }
+    
+    class AnswerNode {
+        constructor(value, id) {
+            this.type = "answer";
+            this.value = value;
+            this.id = id;
+        }
+    }
+    
+    function parse() {
+        const text = JSON.stringify(parseQ($(".treeline")[0]));
+        console.log(text);
+    }
+    
+    function load() {
+        {% autoescape off %}
+        const data = JSON.parse('{{ scenario_data }}');
+        {% endautoescape %}
+        const question = createQ(data, false);
+        document.getElementById("scenario_root").appendChild(question);
+    }
+    
+    function parseQ(question) {
+        const li = $(question).find(">li")[0];
+        const value = $(li).find(">b").first().text();
+        const choices = $(li).find(">ul").first().children().filter((_, item) => item.className !== "");
+        const choiceNodes = [];
+    
+        choices.each((index, choice) => {
+            choiceNodes.push(parseC(choice));
+        });
+    
+        return new QuestionNode(value, choiceNodes);
+    }
+    
+    function parseC(choice) {
+        const value = $(choice).contents().filter(function () {
+            return this.nodeType == Node.TEXT_NODE;
+        })[0].textContent.replaceAll("\n", "").trim();
+    
+        const ul = $(choice).find(">ul")[0];
+    
+        if (ul.children.length == 0)
+            return new ChoiceNode(value);
+    
+        const nextType = $(ul).find(">li")[0].className;
+        let next = null;
+    
+        if (nextType === "question") {
+            next = parseQ(ul)
+        }
+        else if (nextType === "answer") {
+            next = parseA(ul);
+        }
+    
+        return new ChoiceNode(value, next);
+    }
+    
+    function parseA(answer) {
+        const li = $(answer).find(">li")[0];
+        const id = Number(li.getAttribute("data-answer-id"));
+        const value = $(li).contents().filter(function () {
+            return this.nodeType == Node.TEXT_NODE;
+        })[0].textContent.replaceAll("\n", "").trim();
+    
+        return new AnswerNode(value, id);
+    }
+    
+    function createQ(question, withDelete=true) {
+        const li = document.createElement("li");
+        const b = document.createElement("b");
+        const nextUl = document.createElement("ul");
+    
+        const addChoiceBtn = createAddChoiceButton();
+        const addChoiceBtnli = document.createElement("li");
+        addChoiceBtnli.appendChild(addChoiceBtn);
+    
+        li.appendChild(b);
+
+        if (withDelete) {
+            li.appendChild(createButtonsGroup([createEditQuestionButton(), createDelQuestionButton()]));
+        }
+        else {
+            li.appendChild(createButtonsGroup([createEditQuestionButton()]));
+        }
+        
+        li.appendChild(nextUl);
+        li.classList.add("question");
+    
+        b.appendChild(document.createTextNode(question.value.trim() + " "));
+    
+        question.choices.forEach((choice) => {
+            nextUl.appendChild(createC(choice));
+        });
+    
+        nextUl.appendChild(addChoiceBtnli);
+        return li;
+    }
+    
+    function createC(choice) {
+        const li = document.createElement("li");
+        const nextUl = document.createElement("ul");
+    
+        li.appendChild(document.createTextNode(choice.value.trim() + " "));
+        li.appendChild(createButtonsGroup([createEditChoiceButton(), createDelChoiceButton()]))
+        li.appendChild(nextUl);
+        li.classList.add("choice");
+    
+        if (choice.next != null) {
+            if (choice.next.type === "question") {
+                nextUl.appendChild(createQ(choice.next));
+            }
+            else if (choice.next.type === "answer") {
+                nextUl.appendChild(createA(choice.next));
+            }
+        }
+        else {
+            const nextLi = document.createElement("li");
+            nextLi.appendChild(createButtonsGroup([createAddQuestionButton(), createAddAnswerButton()]))
+            nextUl.appendChild(nextLi);
+        }
+    
+        return li;
+    }
+    
+    function createA(answer) {
+        const li = document.createElement("li");
+        const nextUl = document.createElement("ul");
+    
+        li.appendChild(document.createTextNode(answer.value + " "));
+        li.appendChild(createButtonsGroup([createEditAnswerButton(), createDelAnswerButton()]));
+        li.appendChild(nextUl);
+        li.classList.add("answer");
+        li.setAttribute("data-answer-id", answer.id);
+    
+        return li;
+    }
+    
+    function createAddQuestionButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "+ Вопрос";
+        btn.setAttribute("onclick", "addQuestion(this)");
+        btn.setAttribute("class", "btn btn-outline-primary btn-sm");
+    
+        return btn;
+    }
+    
+    function createAddChoiceButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "+ Вариант ответа";
+        btn.setAttribute("onclick", "addChoice(this)");
+        btn.setAttribute("class", "btn btn-outline-primary btn-sm");
+    
+        return btn;
+    }
+    
+    function createAddAnswerButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "+ Ответ";
+        // btn.setAttribute("onclick", "addAnswer(this)");
+        btn.setAttribute("class", "btn btn-outline-primary btn-sm");
+        btn.setAttribute("data-bs-toggle", "modal");
+        btn.setAttribute("data-bs-target", "#addAnswerModal");
+    
+        return btn;
+    }
+
+    function createEditAnswerButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "Изменить";
+        // btn.setAttribute("onclick", "addAnswer(this)");
+        btn.setAttribute("class", "btn btn-outline-secondary btn-sm");
+        btn.setAttribute("data-bs-toggle", "modal");
+        btn.setAttribute("data-bs-target", "#editAnswerModal");
+    
+        return btn;
+    }
+
+    function createDelAnswerButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "Удалить";
+        btn.setAttribute("onclick", "delAnswer(this)");
+        btn.setAttribute("class", "btn btn-outline-danger btn-sm");
+        // btn.setAttribute("data-bs-toggle", "modal");
+        // btn.setAttribute("data-bs-target", "#editAnswerModal");
+    
+        return btn;
+    }
+
+    function createEditQuestionButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "Изменить";
+        btn.setAttribute("onclick", "editQuestion(this)");
+        btn.setAttribute("class", "btn btn-outline-secondary btn-sm");
+    
+        return btn;
+    }
+
+    function createDelQuestionButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "Удалить";
+        btn.setAttribute("onclick", "delQuestion(this)");
+        btn.setAttribute("class", "btn btn-outline-danger btn-sm");
+    
+        return btn;
+    }
+
+    function createEditChoiceButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "Изменить";
+        btn.setAttribute("onclick", "editChoice(this)");
+        btn.setAttribute("class", "btn btn-outline-secondary btn-sm");
+    
+        return btn;
+    }
+
+    function createDelChoiceButton() {
+        const btn = document.createElement("button");
+        btn.textContent = "Удалить";
+        btn.setAttribute("onclick", "delChoice(this)");
+        btn.setAttribute("class", "btn btn-outline-danger btn-sm");
+    
+        return btn;
+    }
+
+    function createButtonsGroup(buttons) {
+        const container = document.createElement("div");
+        container.classList.add("btn-group");
+        container.setAttribute("role", "group");
+
+        buttons.forEach(button => {
+            container.appendChild(button);
+        });
+
+        return container;
+    }
+    
+    function createListItem(content, bold = false) {
+        const li = document.createElement("li");
+        const textEl = document.createTextNode(content);
+    
+        if (bold) {
+            const b = document.createElement("b");
+            b.appendChild(textEl);
+            li.appendChild(b);
+        }
+        else {
+            li.appendChild(textEl);
+        }
+    
+        return li;
+    }
+    
+    function addQuestion(btn) {
+        let question = prompt("Введите вопрос");
+    
+        if (question === null)
+            return;
+    
+        const li = btn.parentElement.parentElement;
+    
+        const questionLi = createListItem(question + " ", true);
+    
+        const chUl = document.createElement("ul");
+        questionLi.appendChild(createButtonsGroup([createEditQuestionButton(), createDelQuestionButton()]));
+        questionLi.appendChild(chUl);
+        questionLi.classList.add("question");
+    
+        const buttonLi = document.createElement("li");
+        buttonLi.appendChild(createAddChoiceButton());
+        chUl.appendChild(buttonLi);
+    
+        li.querySelectorAll("button").forEach(x => x.remove());
+        li.parentElement.appendChild(questionLi);
+        li.remove();
+        save();
+    }
+    
+    function addChoice(btn) {
+        let choice = prompt("Введите вариант ответа");
+    
+        if (choice === null)
+            return;
+    
+        const ul = btn.parentElement.parentElement;
+        const li = createListItem(choice + " ");
+        const nextUl = document.createElement("ul");
+        const nextLi = document.createElement("li");
+        
+        li.appendChild(createButtonsGroup([createEditChoiceButton(), createDelChoiceButton()]))
+        li.appendChild(nextUl);
+        nextUl.appendChild(nextLi);
+        
+        nextLi.appendChild(createButtonsGroup([createAddQuestionButton(), createAddAnswerButton()]))
+        //nextLi.appendChild(createAddQuestionButton());
+        //nextLi.appendChild(createAddAnswerButton());
+        li.classList.add("choice");
+    
+        ul.insertBefore(li, btn.parentElement);
+        save();
+    }
+    
+    function addAnswer(btn, answer, id) {
+        if (answer === null)
+            return;
+    
+        const li = btn.parentElement.parentElement;
+    
+        const answerLi = createListItem(`[Ответ] ${answer} `);
+        answerLi.setAttribute("class", "answer");
+        answerLi.setAttribute("data-answer-id", id);
+        answerLi.appendChild(createButtonsGroup([createEditAnswerButton(), createDelAnswerButton()]))
+    
+        const chUl = document.createElement("ul");
+        answerLi.appendChild(chUl);
+    
+        li.querySelectorAll("button").forEach(x => x.remove());
+        li.parentElement.appendChild(answerLi);
+        li.remove();
+    }
+
+    function save() {
+        result = false;
+
+        $.ajax({
+            url: '/scenario/save/',
+            method: 'post',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin',
+            dataType: 'json',
+            data: {"scenario": JSON.stringify(parseQ($(".treeline")[0])) },
+            success: function(data) {
+                if (data.status == 0) {
+                    alert(`Не удалось сохранить изменения!`);
+                    return;
+                }
+                
+                console.log("Изменения сохранены!");
+                result = true;
+            },
+            error: function (jqXHR, exception) {
+                console.log(exception);
+                alert("Произошла ошибка! Изменения не сохранены.");
+            }
+        });
+
+        return result;
+    }
+
+    // ==================
+
+    function editQuestion(btn) {
+        const questionTextEl = $(btn.parentElement.parentElement).find(">b");
+        const questionText = questionTextEl.text().trim();
+        let newQuestionText = prompt("Укажите новый текст вопроса", questionText);
+        
+        if (newQuestionText !== null)
+            newQuestionText = newQuestionText.trim();
+
+        if (newQuestionText !== null && newQuestionText != questionText && newQuestionText != "")
+        {
+            questionTextEl.text(newQuestionText + " ");
+            save();
+        }
+    }
+
+    function delQuestion(btn) {
+        result = confirm("Вы уверены, что хотите удалить вопрос?\n\nВсе вложенные ответвления будут удалены без возможности восстановления!");
+
+        if (!result)
+            return;
+        
+        const choice = btn.parentElement.parentElement.parentElement;
+        btn.parentElement.parentElement.remove();
+        
+        const buttonsLi = document.createElement("li");
+        buttonsLi.appendChild(createButtonsGroup([createAddQuestionButton(), createAddAnswerButton()]));
+        
+        choice.appendChild(buttonsLi);
+
+        save();
+    }
+
+    function editChoice(btn) {
+        const choiceTextEl = $(btn.parentElement.parentElement).contents().filter(function () {
+            return this.nodeType == Node.TEXT_NODE;
+        });
+
+        const choiceText = choiceTextEl[0].textContent.replaceAll("\n", "").trim();
+        let newChoiceText = prompt("Укажите новый текст варианта ответа", choiceText);
+        
+        if (newChoiceText !== null)
+        newChoiceText = newChoiceText.trim();
+
+        if (newChoiceText !== null && newChoiceText != choiceText && newChoiceText != "")
+        {
+            choiceTextEl[0].data = newChoiceText + " ";
+            save();
+        }
+    }
+
+    function delChoice(btn) {
+        result = confirm("Вы уверены, что хотите удалить вариант ответа?\n\nВсе вложенные ответвления будут удалены без возможности восстановления!");
+
+        if (!result)
+            return;
+        
+        btn.parentElement.parentElement.remove();
+
+        save();
+    }
+
+    $("#answerForm").on("submit", function () {
+        $.ajax({
+            url: '/scenario/answer/',
+            method: 'post',
+            dataType: 'json',
+            data: new FormData($("#answerForm")[0]),
+            processData: false,
+            contentType:false,
+            success: function(data) {
+                if (data.status == 0) {
+                    alert(`Произошла ошибка: "${data.message}".\nОтвет не добавлен.`);
+                    return;
+                }
+                
+                addAnswer(lastShowModalButton, data.shortEditorName, data.id);
+                console.log(data);
+                save();
+                $("#close_answer_modal_btn").click();
+                $('#answerForm')[0].reset();
+            },
+            error: function (jqXHR, exception) {
+                console.log(exception);
+                alert("Произошла ошибка! Ответ не добавлен.");
+            }
+        });
+        
+        return false;
+    });
+
+    $("#editAnswerForm").on("submit", function () {
+        $.ajax({
+            url: '/scenario/editAnswer/',
+            method: 'post',
+            dataType: 'json',
+            data: new FormData($("#editAnswerForm")[0]),
+            processData: false,
+            contentType:false,
+            success: function(data) {
+                if (data.status == 0) {
+                    alert(`Произошла ошибка: "${data.message}".\nОтвет не изменён.`);
+                    return;
+                }
+                
+                const editorTitleEl = $(lastShowModalButton.parentElement.parentElement).contents().filter(function () {
+                    return this.nodeType == Node.TEXT_NODE;
+                });
+
+                editorTitleEl[0].data = `[Ответ] ${$("#id_edit_short_editor_name").val()} `;
+                
+                save();
+                $("#close_edit_answer_modal_btn").click();
+                $('#editAnswerForm')[0].reset();
+
+                console.log(data);
+            },
+            error: function (jqXHR, exception) {
+                console.log(exception);
+                alert("Произошла ошибка! Ответ не изменён.");
+            }
+        });
+        
+        return false;
+    });
+    
+    
+    var addAnswerModal = document.getElementById('addAnswerModal');
+    let lastShowModalButton = null;
+    addAnswerModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        lastShowModalButton = button;
+    });
+
+    var editAnswerModal = document.getElementById('editAnswerModal');
+    editAnswerModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        lastShowModalButton = button;
+        
+        const answerId = Number(button.parentElement.parentElement.getAttribute("data-answer-id"));
+
+        $.ajax({
+            url: '/scenario/answer/',
+            method: 'get',
+            dataType: 'json',
+            data: {"answer_id": answerId},
+            success: function(data) {
+                if (data.status == 0) {
+                    alert(`Произошла ошибка: "${data.message}".`);
+                    return;
+                }
+                
+                $("#id_edit_answer_text").val(data.answerText);
+
+                if (data.file === null) {
+                    $("#edit_answer_file").css({display: "none"});
+                }
+                else {
+                    $("#edit_answer_file").css({display: "block"});
+                    $("#id_delete_file_lb").text(`Текущий файл: ${decodeURI(data.file)}`);
+                }
+
+                const editorTitleEl = $(button.parentElement.parentElement).contents().filter(function () {
+                    return this.nodeType == Node.TEXT_NODE;
+                });
+
+                $("#id_edit_short_editor_name").val(editorTitleEl.text().trim().substring(8));
+                $("#id_edit_answer_id").val(answerId);
+                console.log(data);
+            },
+            error: function (jqXHR, exception) {
+                console.log(exception);
+                alert("Произошла ошибка!");
+            }
+        });
+    });
+
+    load();
+</script>
+{% endblock %}
